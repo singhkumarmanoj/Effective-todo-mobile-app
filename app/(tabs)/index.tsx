@@ -188,9 +188,11 @@ export default function Home({item,index,onDelete}:any) {
    const renderunderprocessList = () => (
     <View style={styles.taskcontainer}>
       
+      <View>
 
-      <Text style={styles.subheading}>Underprocess task <Loader size={18} /> ({underprocess.length})</Text>
-
+      <Text style={styles.subheading}>Underprocess task ({underprocess.length})</Text>
+      </View>
+      {/* <Loader /> */}
       {underprocess.length === 0 ? (
         <Text style={styles.empty}>no available</Text>
       ) : (
@@ -230,7 +232,7 @@ export default function Home({item,index,onDelete}:any) {
           data={completed}
           renderItem={({ item, index }: { item: string; index: number }) => (
             <View style={styles.item}>
-              <Text><LaptopMinimalCheck /> {item}</Text>
+              <Text> {item}</Text>
               <TouchableOpacity 
                 onPress={() => {
                   setSelectIndex(index); 
@@ -306,82 +308,51 @@ export default function Home({item,index,onDelete}:any) {
 
       {/* Modal/dialog box */}
       <Modal
-        
           transparent={true}
           visible = {visible}
           animationType="fade"
           onRequestClose={() => setVisible(false)}
       >
+
           <View style={styles.headmodal}>
             <View style={styles.modallists}>
+
+                {/*from task lists Send to underprocess and completed */}
+
+                {currentList === "tasks" && (
+                  <>
+                  <TouchableOpacity 
+                    onPress={()=> {
+                      if(selectIndex !== null) {
+                        sendTounderprocess(selectIndex);
+                        setVisible(false);
+                      setSelectIndex(null);
+                    }
+                   }}
+                >
+
+                  <Text  style={styles.modalText} >Send to underprocess</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                  onPress={()=> {
+                    if(selectIndex !== null) {
+                      sendToCompleted(selectIndex);
+                      setVisible(false);
+                    setSelectIndex(null);
+                  }
+                }}
+                >
+                  <Text  style={styles.modalText} >Send to Completed</Text>
+                  </TouchableOpacity>
+                  </>
+              )}
               
-                            {/*from task lists Send to underprocess and completed */}
-              
-                            {currentList === "tasks" && (
-                              <>
-                              <TouchableOpacity 
-                              onPress={()=> {
-                                if(selectIndex !== null) {
-                                  sendTounderprocess(selectIndex);
-                                  setVisible(false);
-                                setSelectIndex(null);
-                              }
-                            }}
-                            >
-                              <Text  style={styles.modalText} >Send to underprocess</Text>
-                              </TouchableOpacity>
-
-                              <TouchableOpacity 
-                              onPress={()=> {
-                                if(selectIndex !== null) {
-                                  sendToCompleted(selectIndex);
-                                  setVisible(false);
-                                setSelectIndex(null);
-                              }
-                            }}
-                            >
-                              <Text  style={styles.modalText} >Send to Completed</Text>
-                              </TouchableOpacity>
-                              </>
-                          )}
-                          {/* from underprocess send to todo and completed */}
-
-                            {currentList === "underprocess" && (
-                              <>
-                              <TouchableOpacity 
-                              onPress={()=> {
-                                if(selectIndex !== null) {
-                                  sendToTaskLists(selectIndex);
-                                  setVisible(false);
-                                setSelectIndex(null);
-                                // setCurrentList(null)
-                              }
-                            }}
-                            >
-                              <Text  style={styles.modalText} >Send to task list</Text>
-                              </TouchableOpacity>
-
-                              <TouchableOpacity 
-                              onPress={()=> {
-                                if(selectIndex !== null) {
-                                  underprocessToComplted(selectIndex);
-                                  setVisible(false);
-                                setSelectIndex(null);
-                              }
-                            }}
-                            >
-                              <Text  style={styles.modalText} >Send to Completed</Text>
-                              </TouchableOpacity>
-                              </>
-                          )}
-
             {/* ---------------------------- */}
 
 
             {/* Delete option for both lists */}
               <TouchableOpacity
               onPress={() =>{
-                
                 if(selectIndex !==null && currentList){
                   if(currentList === "tasks"){
                       
@@ -396,13 +367,12 @@ export default function Home({item,index,onDelete}:any) {
                   setSelectIndex(null);
                   setCurrentList(null)
                 }}
-                
                 >
                 <Text style={styles.modalText} >Delete</Text>
 
               </TouchableOpacity>
-                {/* Cancel Button */}
 
+              {/* Cancel Button */}
               <TouchableOpacity 
                 onPress={() => {
                   setVisible(false);
